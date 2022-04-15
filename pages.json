@@ -21,7 +21,14 @@
       "enablePullDownRefresh": false
     }
 
-  }],
+  }    ,{
+            "path" : "pages/detail/detail",
+            "style" : {
+                "navigationBarTitleText": "sticky-list"
+            }
+            
+        }
+    ],
   "globalStyle": {
     "navigationBarTextStyle": "white",
     "navigationBarTitleText": "养老汇",

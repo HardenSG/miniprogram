@@ -1,0 +1,148 @@
+<template>
+	<list :id="parentListId" class="page" :bounce="false" isSwiperList="true">
+		<refresh class="refresh" @refresh="onrefresh" @pullingdown="onpullingdown"
+			:display="refreshing ? 'show' : 'hide'">
+			<div class="refresh-view">
+				<text class="loading-text">{{refreshText}}</text>
+			</div>
+		</refresh>
+		<cell>
+			<view id="head" class="header">
+				<text class="header-title">header</text>
+			</view>
+		</cell>
+		<cell>
+			<view class="main-content" :style="'height:' + pageHeight + 'px'">
+				<view class="sticky-view">
+					<text class="sticky-title">Sticky view</text>
+				</view>
+				<list ref="sublist" class="list" :offset-accuracy="5" :bounce="false" isSwiperList="true">
+					<cell v-for="(item, index) in dataList" :key="item.id" :ref="'item'+index" @click="onclick">
+						<view class="list-item">
+							<text>{{item.name}}</text>
+						</view>
+					</cell>
+				</list>
+			</view>
+		</cell>
+	</list>
+</template>
+
+<script>
+	// #ifdef APP-PLUS
+	const dom = weex.requireModule('dom');
+	// #endif
+
+	export default {
+		data() {
+			return {
+				parentListId: "parentListId",
+				pageHeight: 300,
+				dataList: [],
+				refreshing: false,
+				refreshText: "",
+				refreshFlag: false
+			}
+		},
+		created() {
+			for (var i = 1; i <= 32; i++) {
+				this.dataList.push({
+					id: i,
+					name: i
+				});
+			}
+		},
+		onReady() {
+			this.pageHeight = uni.getSystemInfoSync().windowHeight;
+			uni.createSelectorQuery().in(this).select('#head').boundingClientRect().exec(rect => {
+				this.$refs.sublist.setSpecialEffects({
+					id: this.parentListId,
+					headerHeight: rect[0].height
+				});
+			});
+		},
+		methods: {
+			onrefresh(e) {
+				this.refreshing = true;
+				this.refreshText = "刷新中...";
+				setTimeout(() => {
+					this.refreshing = false;
+					this.refreshFlag = false;
+					this.refreshText = "已刷新";
+				}, 2000)
+			},
+			onpullingdown(e) {
+				if (this.refreshing) {
+					return;
+				}
+
+				this.pulling = false;
+				if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
+					this.refreshFlag = true;
+					this.refreshText = "释放立即刷新";
+				} else {
+					this.refreshFlag = false;
+					this.refreshText = "下拉可以刷新";
+				}
+			}
+		}
+	}
+</script>
+
+<style>
+	/* #ifndef APP-PLUS */
+	page {
+		width: 100%;
+		min-height: 100%;
+		display: flex;
+	}
+
+	/* #endif */
+
+	.page {
+		flex: 1;
+	}
+
+	.refresh-view {
+		width: 750rpx;
+		height: 80px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.header {
+		height: 160px;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		background-color: #f4f4f4;
+	}
+
+	.header-title {
+		font-size: 30px;
+		font-weight: bold;
+		color: #444;
+	}
+
+	.sticky-view {
+		margin-left: 12px;
+		margin-right: 12px;
+		padding: 20px;
+		background-color: #EBEBEB;
+		border-radius: 5px;
+	}
+
+	.list {
+		flex: 1;
+	}
+
+	.list-item {
+		margin-left: 12px;
+		margin-right: 12px;
+		margin-top: 12px;
+		padding: 20px;
+		background-color: #fff;
+		border-radius: 5px;
+	}
+</style>
