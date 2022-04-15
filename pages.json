@@ -52,5 +52,21 @@
         "selectedIconPath":"./static/c1.png"
       }
     ]
-  }
+  },
+  "subPackages":[
+    {
+      "root":"subPak",
+      "pages":[
+      {
+                    "path" : "swiper/swiper",
+                    "style" :                                                                                    
+                {
+                    "navigationBarTitleText": "",
+                    "enablePullDownRefresh": false
+                }
+                
+                }
+            ]
+    }
+  ]
 }

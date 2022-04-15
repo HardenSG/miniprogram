@@ -6,6 +6,7 @@
 
 <script>
   import request from '../../utils/request.js'
+  import showMessage from '../../utils/showMessage.js'
   export default {
     data() {
       return {
@@ -17,7 +18,8 @@
       async function c(){
         const b = await a;
         return b;
-      }
+      } 
+      uni.$show.showMessage("你好啊！");
     }
   }
 </script>
