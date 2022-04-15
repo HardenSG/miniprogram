@@ -5,12 +5,13 @@
 </template>
 
 <script>
+  import my from '../my/my.vue'
   export default {
     data() {
       return {
         
       };
-    }
+    },
   }
 </script>
 
